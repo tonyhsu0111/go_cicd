@@ -1,4 +1,4 @@
-package linux
+package command
 
 import (
 	"fmt"
@@ -10,33 +10,22 @@ import (
 	"time"
 )
 
-// type sshConfig interface {
-// 	sshClient() string
-// 	sshHost() string
-// 	sshUser() string
-// 	sshPasswrod() string
-// 	sshType() string    // password或者key
-// 	sshKeyPath() string // ssh id_rsa.id路徑
-// 	sshPort() int
-// }
-
-func ssh_cmd01() {
-	var svnConfig sshclient.SSHConfig
-
-	svnConfig.SSHHost = "192.168.150.94"
-	svnConfig.SSHUser = "root"
-	svnConfig.SSHPasswrod = "1qasde32"
-	svnConfig.SSHType = "password"    // password或者key 這裡是key型別登陸遠端伺服器
-	svnConfig.SSHKeyPath = "./id_rsa" // ssh id_rsa.id路徑
-	svnConfig.SSHPort = 22
+func Ssh_cmd01() string {
+	var svnConfig sshclient.SshConfig
+	svnConfig.SshHost = "192.168.150.94"
+	svnConfig.SshUser = "root"
+	svnConfig.SshPassword = "1qasde32"
+	svnConfig.SshType = "password"    // password或者key 這裡是key型別登陸遠端伺服器
+	svnConfig.SshKeyPath = "./id_rsa" // ssh id_rsa.id路徑
+	svnConfig.SshPort = 22
 	testCmd := "ls -al"
-	sshclient.SSHRemoteExcute(svnConfig, testCmd)
+	return sshclient.SSHRemoteExcute(svnConfig, testCmd)
+
 }
 
 func CICD_CMD02(w http.ResponseWriter, r *http.Request) {
-	ssh_cmd01()
+	w.Write([]byte(Ssh_cmd01()))
 	time.Sleep(1 * time.Second)
-	io.WriteString(w, "<h1>Hi io.WriteString</h1>")
 
 }
 

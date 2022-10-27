@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go_cicd/linux"
-	"go_cicd/windows"
+	"go_cicd/command"
+
 	"log"
 	"net/http"
 
@@ -19,9 +19,9 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", sayHello).Methods("POST")
-	r.HandleFunc("/test", linux.CICD_CMD01).Methods("POST")
-	r.HandleFunc("/linuxtest02", linux.CICD_CMD02).Methods("POST")
-	r.HandleFunc("/wintest01", windows.WinCICD_CMD01).Methods("POST")
+	r.HandleFunc("/test", command.CICD_CMD01).Methods("POST")
+	r.HandleFunc("/linuxtest02", command.CICD_CMD02).Methods("POST")
+	r.HandleFunc("/wintest01", command.WinCICD_CMD01).Methods("POST")
 	log.Println("service starting...")
 	log.Fatal(http.ListenAndServe(":8400", r)) //設定監聽的埠
 
