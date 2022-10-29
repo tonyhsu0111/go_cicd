@@ -56,6 +56,7 @@ func SSHRemoteExcute(sshCfg SshConfig, cmd string) string {
 	// dial 獲取ssh client
 	addr := fmt.Sprintf("%s:%d", sshCfg.SshHost, sshCfg.SshPort)
 	sshClient, err := ssh.Dial("tcp", addr, config)
+
 	if err != nil {
 		log.Fatal("genarate ssh client fail", err)
 	}
