@@ -1,0 +1,14 @@
+#FROM plugins/base:linux-amd64
+FROM centos:7
+
+LABEL maintainer="TonyHsu <me.tonyhsu@gmail.com>" \
+  org.label-schema.name="GO_CICD" \
+  org.label-schema.vendor="TonyHsu" \
+  org.label-schema.schema-version="1.0"
+
+EXPOSE 8000
+
+COPY release/linux/amd64/gocicd /bin/
+RUN  chmod 755 /bin/gocicd
+
+ENTRYPOINT ["/bin/gocicd"]

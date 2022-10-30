@@ -1,0 +1,41 @@
+FROM golang:1.19.2 as build
+ENV appsrc /appsrc
+
+RUN mkdir -p $appsrc
+
+COPY / $appsrc
+
+WORKDIR $appsrc
+
+# TERM is not set 
+ENV TERM xterm
+
+#Time
+ENV TW=Asia/Taipei
+RUN ln -snf /usr/share/zoneinfo/$TW /etc/localtime && echo $TW > /etc/timezone
+
+RUN  cd $appsrc/
+RUN  CGO_ENABLED=1 GOOS=linux go build -a -o gocicd .
+RUN  echo "$(date +'%Y%m%d%H%M%S')" > $appsrc/VERSION
+RUN  md5sum gocicd | awk '{ print $1; }' > $appsrc/MD5                
+
+FROM centos:7 as prod
+
+LABEL maintainer="TonyHsu <me.tonyhsu@gmail.com>" \
+  org.label-schema.name="GO_CICD" \
+  org.label-schema.vendor="TonyHsu" \
+  org.label-schema.schema-version="1.0"
+
+ENV app /bin
+
+COPY --from=build /appsrc/gocicd  $app/
+COPY --from=build /appsrc/VERSION  $app/
+COPY --from=build /appsrc/MD5  $app/
+
+EXPOSE 8000
+
+WORKDIR $app
+
+RUN chmod 755 $app/gocicd
+
+ENTRYPOINT ["/bin/gocicd"]

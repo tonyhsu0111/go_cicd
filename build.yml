@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  gocicd:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    container_name: gocicd
+    image: tonyhsu0111/gocicd:latest
+    restart: always
+    ports:
+      - "8000:8000"
+      - "8001:8001"

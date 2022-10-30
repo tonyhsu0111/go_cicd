@@ -1,0 +1,57 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # go-version: [1.18.x]
+        platform: [ ubuntu-latest ]
+    runs-on: ${{ matrix.platform }}
+    container: golang:1.19.2
+    # - name: Install Go
+    #   uses: actions/setup-go@v3
+    #   with:
+    #     go-version: ${{ matrix.go-version }}
+    steps:
+    - name : Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build binary
+      run: |
+        make build
+        #go build -v -a -o release/linux/amd64/gocicd
+
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@2.9
+      with:
+        name: tonyhsu0111/gocicd:latest
+        username: tonyhsu0111
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        dockerfile: Dockerfile.linux.amd64
+
+    # - name: scp file 
+    #   uses: appleboy/scp-action@master
+    #   with:
+    #     host: ${{ secrets.LINODE_SSH_HOST }}
+    #     username: root
+    #     key: ${{ secrets.LINODE_SSH_KEY }}
+    #     source: "docker-compose.yml,release/linux/amd64/gocicd"
+    #     target: "/home/go_cicd"
+
+    # - name: deploy server start
+    #   uses: appleboy/ssh-action@v0.0.6
+    #   with:
+    #     host: ${{ secrets.LINODE_SSH_HOST }}
+    #     username: root
+    #     key: ${{ secrets.LINODE_SSH_KEY }}
+    #     script_stop: true
+    #     script: |
+    #          mkdir -p /home/go_cicd && cd /home/go_cicd
+    #          docker login -u tonyhsu0111 -p ${{ secrets.DOCKER_PASSWORD }}
+    #          docker-compose pull && docker-compose up -d
