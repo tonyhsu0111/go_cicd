@@ -6,7 +6,7 @@
 ```
 http
    ### 執行Post CMD
- POST http://localhost:8400/linuxcmd
+ POST http://localhost:8000/linuxcmd
    Content-Type: application/json
    {
      "Host": "xx.xx.xx.xx",
