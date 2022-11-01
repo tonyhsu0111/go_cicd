@@ -42,7 +42,7 @@ func SSHRemoteExcute(sshCfg SshConfig, cmd string) string {
 
 	// 建立ssh登入配置
 	config := &ssh.ClientConfig{
-		Timeout:         time.Second, // ssh連線time out時間一秒鐘,如果ssh驗證錯誤會在一秒鐘返回
+		Timeout:         time.Second * 0, // ssh連線time out時間一秒鐘,如果ssh驗證錯誤會在一秒鐘返回
 		User:            sshCfg.SshUser,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // 這個可以,但是不夠安全
 	}
@@ -58,7 +58,7 @@ func SSHRemoteExcute(sshCfg SshConfig, cmd string) string {
 	sshClient, err := ssh.Dial("tcp", addr, config)
 
 	if err != nil {
-		log.Fatal("genarate ssh client fail", err)
+		log.Fatal("genarate ssh client fail ", err)
 	}
 	defer sshClient.Close()
 
