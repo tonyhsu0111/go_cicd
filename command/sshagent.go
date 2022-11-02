@@ -22,9 +22,7 @@ type DeployJson struct {
 	Command string `json:"command,omitempty"`
 }
 
-const Port = 22
-
-func Ssh_Agent(Host, User, Password, Cmd string) string {
+func Ssh_Agent(Port int, Host, User, Password, Cmd string) string {
 	var agentConfig sshclient.SshConfig
 	agentConfig.SshHost = Host
 	agentConfig.SshUser = User
@@ -33,6 +31,9 @@ func Ssh_Agent(Host, User, Password, Cmd string) string {
 	agentConfig.SshKeyPath = "./id_rsa" // ssh id_rsa.id路徑
 	agentConfig.SshPort = Port
 	CommandLine := Cmd
+	if Port == 0 {
+		agentConfig.SshPort = 22 //沒傳Port的值預設為22 Port
+	}
 	return sshclient.SSHRemoteExcute(agentConfig, CommandLine)
 
 }
@@ -59,6 +60,7 @@ func SshCmd(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
+	// fmt.Println(deployjson)
 	// 走BasicAuthName 方式
 	auth := r.Header.Get("Authorization")
 
@@ -73,7 +75,9 @@ func SshCmd(w http.ResponseWriter, r *http.Request) {
 	// User := deployjson.User
 	// Password := deployjson.Password
 	CommandLine := deployjson.Command
-	w.Write([]byte(Ssh_Agent(Host, User, Password, CommandLine)))
+	Port := deployjson.Port
+	// fmt.Println(Port, Host, User, Password)
+	w.Write([]byte(Ssh_Agent(Port, Host, User, Password, CommandLine)))
 	time.Sleep(1 * time.Second)
 
 }

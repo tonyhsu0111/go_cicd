@@ -6,10 +6,12 @@
 ```
 http
    ### 執行Post CMD
+   如果沒有設定Port，預設為22
  POST http://localhost:8400/linuxcmd
    Content-Type: application/json
    {
      "Host": "xx.xx.xx.xx",
+     "Port": 30000,
      "Command": "cd /home;pwd;docker ps -a"
    }
 ```
