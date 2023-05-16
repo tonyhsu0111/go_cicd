@@ -16,7 +16,7 @@ func Version(w http.ResponseWriter, r *http.Request) {
 }
 func Ssh_Command_Function() {
 	r := mux.NewRouter()
-	r.HandleFunc("/version", Version).Methods("POST")
+	r.HandleFunc("/version", Version).Methods("GET")
 	r.HandleFunc("/linuxcmd", command.SshCmd).Methods("POST")
 	r.HandleFunc("/windowscmd", command.SshCmd).Methods("POST")
 	log.Println("service starting...")
@@ -26,7 +26,7 @@ func Ssh_Command_Function() {
 func main() {
 	go Ssh_Command_Function()
 	r := mux.NewRouter()
-	r.HandleFunc("/version", Version).Methods("POST")
+	r.HandleFunc("/version", Version).Methods("GET")
 	r.HandleFunc("/linuxcmd", command.SshCmd).Methods("POST")
 	r.HandleFunc("/windowscmd", command.SshCmd).Methods("POST")
 	log.Println("service starting...")
